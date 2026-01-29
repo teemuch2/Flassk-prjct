@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HR Attrition Analysis</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6f8;
+            text-align: center;
+        }
+        .box {
+            background: white;
+            width: 70%;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ccc;
+        }
+        button {
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        canvas {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>HR Attrition Analysis Dashboard</h1>
+
+<div class="box">
+    <button onclick="loadData()">Show Analysis</button>
+    <p id="summary"></p>
+</div>
+
+<div class="box">
+    <h3>Department-wise Attrition (Bar Chart)</h3>
+    <canvas id="barChart"></canvas>
+</div>
+
+<div class="box">
+    <h3>Overall Attrition (Pie Chart)</h3>
+    <canvas id="pieChart"></canvas>
+</div>
+
+<script>
+async function loadData() {
+
+    // Attrition Rate
+    const rateRes = await fetch("/attrition-rate");
+    const rateData = await rateRes.json();
+
+    document.getElementById("summary").innerHTML =
+        `Total Employees: ${rateData.total}<br>
+         Attrition Yes: ${rateData.yes}<br>
+         Attrition No: ${rateData.no}<br>
+         Attrition Rate: ${rateData.rate}%`;
+
+    // Department-wise data
+    const deptRes = await fetch("/department-attrition");
+    const deptData = await deptRes.json();
+
+    // Bar Chart
+    new Chart(document.getElementById("barChart"), {
+        type: "bar",
+        data: {
+            labels: Object.keys(deptData),
+            datasets: [{
+                label: "Attrition Count",
+                data: Object.values(deptData)
+            }]
+        }
+    });
+
+    // Pie Chart
+    new Chart(document.getElementById("pieChart"), {
+        type: "pie",
+        data: {
+            labels: ["Attrition Yes", "Attrition No"],
+            datasets: [{
+                data: [rateData.yes, rateData.no]
+            }]
+        }
+    });
+}
+</script>
+
+</body>
+</html>

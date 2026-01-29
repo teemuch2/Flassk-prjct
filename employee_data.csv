@@ -1,0 +1,9 @@
+EmployeeID,Department,Age,Salary,Experience,Attrition
+101,HR,25,30000,1,Yes
+102,IT,32,60000,6,No
+103,Sales,28,35000,3,Yes
+104,IT,40,80000,12,No
+105,HR,30,40000,5,Yes
+106,Sales,26,32000,2,Yes
+107,IT,29,55000,4,Yes
+108,HR,45,70000,15,No
